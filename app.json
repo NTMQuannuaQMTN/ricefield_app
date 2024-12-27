@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "ricefield",
+    "slug": "ricefield",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/tpIcon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/tpIcon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#448D57",
+      "imageWidth": 150
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/tpIcon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/tpIcon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/tpIcon.png",
+          "imageWidth": 100,
+          "resizeMode": "contain",
+          "backgroundColor": "#448D57"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
