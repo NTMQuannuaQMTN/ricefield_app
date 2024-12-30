@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Animated, Text, View, Image, ScrollView, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Animated, Text, View, Image, ScrollView, Dimensions, StatusBar, TouchableOpacity } from "react-native";
 import { useFonts, Nunito_400Regular, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 
 const logoIcon = require("../assets/images/tpIcon.png");
+const testPic = require("../assets/images/testpic.jpg");
 
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
@@ -14,7 +15,10 @@ export default function Index() {
   });
 
   const [isVisible, setIsVisible] = React.useState(true);
-  // const moveAnim1 = new Animated.Value(0);
+  const [key, setKey] = React.useState(1);
+  const [keyText, setKeyText] = React.useState("Key highlight 1");
+  const [descText, setDescText] = React.useState("Further describe the 1st key highlight in 2 lines");
+  const moveAnim = new Animated.Value(0);
   const fadeAnim = new Animated.Value(1);
 
   useEffect(() => {
@@ -28,61 +32,89 @@ export default function Index() {
     })
   }, []);
 
-  return (
-    <View
-      style={styles.container}>
-      {isVisible && (<Animated.View
-        style={[styles.views,
-        {
-          position: 'absolute',
-          zIndex: 1,
-          backgroundColor: "#448D57",
-          opacity: fadeAnim,
-        }
-        ]}
-      >
-        <Image source={logoIcon} style={{ width: 0.4 * vw, height: 0.4 * vw }} />
-      </Animated.View>)}
-      <Animated.View
-        style={[styles.views, { backgroundColor: '#FFFFFF' }]}
-      >
-        <Image source={logoIcon} style={{ backgroundColor: '#000000', width: 0.8 * vw, height: 0.6 * vh, objectFit: 'contain' }} />
-        <Text style={styles.key_highlight}>Key highlight 1</Text>
-        <Text style={styles.desc_highlight}>Further describe the 1st key highlight in 2 lines</Text>
-        <View style={styles.status_cont}>
-          <View style={styles.status_ele}></View>
-          <View style={styles.status_ele}></View>
-          <View style={styles.status_ele}></View>
-        </View>
-        <View style={{
-          width: vw,
-          height: 0.08 * vh,
-          overflow: 'hidden',
-        }}>
-          <View style={{
-            width: 2 * vw,
-            height: 0.08 * vh,
-            flexDirection: 'row',
-            transform: [{translateX: -vw,}]
-          }}>
-            <View style={styles.button_view}>
-              <View style={[styles.button, { borderColor: '#448D57', borderWidth: 2 }]}>
-                <Text style={[styles.button_text, { color: '#448D57' }]}>Skip</Text>
-              </View>
-              <View style={[styles.button, { backgroundColor: '#448D57' }]}>
-                <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Next</Text>
-              </View>
-            </View>
-            <View style={styles.button_view}>
-              <View style={[styles.button_login, { backgroundColor: '#448D57' }]}>
-                <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Get Started</Text>
-              </View>
-            </View>
+  useEffect(() => {
+    Animated.timing(moveAnim, {
+      toValue: -vw * (key - 2) * (key - 1) / 2,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  }, [key]);
+
+  function nextKey() {
+    if (key < 3) {
+      setKey(key + 1);
+      if (key + 1 === 1) {
+        setKeyText("Key highlight 1");
+        setDescText("Further describe the 1st key highlight in 2 lines");
+      } else if (key + 1 === 2) {
+        setKeyText("Key highlight 2");
+        setDescText("Further describe the 2nd key highlight in 2 lines");
+      } else {
+        setKeyText("Key highlight 3");
+        setDescText("Further describe the 3rd key highlight in 2 lines");
+      }
+    }
+  }
+
+  if (fontsLoaded) {
+    return (
+      <View
+        style={styles.container}>
+        {isVisible && (<Animated.View
+          style={[styles.views,
+          {
+            position: 'absolute',
+            zIndex: 1,
+            backgroundColor: "#448D57",
+            opacity: fadeAnim,
+          }
+          ]}
+        >
+          <Image source={logoIcon} style={{ width: 0.4 * vw, height: 0.4 * vw }} />
+        </Animated.View>)}
+        <Animated.View
+          style={[styles.views, { backgroundColor: '#FFFFFF' }]}
+        >
+          <Image source={testPic} style={{ backgroundColor: '#000000', width: 0.8 * vw, height: 0.6 * vh, objectFit: 'cover' }} />
+          <Text id="key_highlight" style={styles.key_highlight}>{keyText}</Text>
+          <Text id="desc_highlight" style={styles.desc_highlight}>{descText}</Text>
+          <View style={styles.status_cont}>
+            <View style={styles.status_ele}></View>
+            <View style={styles.status_ele}></View>
+            <View style={styles.status_ele}></View>
           </View>
-        </View>
-      </Animated.View>
-    </View>
-  );
+          <View style={{
+            width: vw,
+            height: 0.08 * vh,
+            overflow: 'hidden',
+          }}>
+            <Animated.View id="buttons" style={{
+              width: 2 * vw,
+              height: 0.08 * vh,
+              flexDirection: 'row',
+              transform: [{ translateX: moveAnim, }]
+            }}>
+              <View style={styles.button_view}>
+                <TouchableOpacity style={[styles.button, { borderColor: '#448D57', borderWidth: 2 }]}>
+                  <Text style={[styles.button_text, { color: '#448D57' }]}>Skip</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { backgroundColor: '#448D57' }]} onPress={nextKey}>
+                  <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Next</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.button_view}>
+                <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57' }]}>
+                  <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Get Started</Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          </View>
+        </Animated.View>
+      </View>
+    );
+  } else {
+    return (<View></View>);
+  }
 }
 
 const styles = StyleSheet.create({
@@ -160,6 +192,6 @@ const styles = StyleSheet.create({
   button_text: {
     fontSize: 0.022 * vh,
     lineHeight: 0.025 * vh,
-    fontFamily: 'Nunito_800ExtraBold'
+    fontFamily: 'Nunito_800ExtraBold',
   }
 });
