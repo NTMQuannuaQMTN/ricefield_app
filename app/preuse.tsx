@@ -27,6 +27,7 @@ export default function Index() {
   const [descText, setDescText] = React.useState("Further describe the 1st key highlight in 2 lines");
   const moveAnim = new Animated.Value(0);
   const fadeAnim = new Animated.Value(1);
+  const preloginAnim = new Animated.Value(1);
   const moveCur = new Animated.Value(0);
   const moveOthers = new Animated.Value(0);
   const [isChecked, setIsChecked] = useState(false);
@@ -126,6 +127,17 @@ export default function Index() {
     }).start();
   }, [key])
 
+  useEffect(() => {
+    if (loginPage === 3) {
+      Animated.timing(preloginAnim, {
+        toValue: 0,
+        duration: 250,
+        delay: 2000,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loginPage])
+
   function nextKey() {
     if (key < 3) {
       setKey(key + 1);
@@ -144,8 +156,8 @@ export default function Index() {
 
   if (fontsLoaded) {
     return (
-      <View
-        style={styles.container}>
+      <Animated.View
+        style={[styles.container, { position: 'absolute', top: 0, left: 0, opacity: preloginAnim}]}>
         {isVisible && (<Animated.View
           style={[styles.views,
           {
@@ -478,7 +490,7 @@ export default function Index() {
             </View>
           </Animated.View>
         </Animated.View>
-      </View>
+      </Animated.View>
     );
   } else {
     return (<View></View>);
