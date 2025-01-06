@@ -7,6 +7,7 @@ const logoIcon = require("../assets/images/tpIcon.png");
 const testPic = require("../assets/images/testpic.jpg");
 const roundIcon = require("../assets/images/roundIcon.png");
 import HidePass from "../assets/images/hidepwd.svg";
+const hotRice = require("../assets/images/hot-rice.png");
 
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
@@ -34,6 +35,10 @@ export default function Index() {
   const loginAnim = new Animated.Value(0);
   const fadeLoginAnim = new Animated.Value(1);
   const fadeRegAnim = new Animated.Value(0);
+  const [loginPage, setLoginPage] = useState(0);
+  const [forgotPage, setForgotPage] = useState(0);
+  const [createPage, setCreatePage] = useState(0);
+  const [doneText, setDoneText] = useState("");
 
   useEffect(() => {
     movePage.setValue(0);
@@ -45,29 +50,43 @@ export default function Index() {
   }, [page]);
 
   useEffect(() => {
-    loginAnim.setValue((1 - loginToggle) * (-0.09 * vh));
-    Animated.timing(loginAnim, {
-      toValue: loginToggle * (-0.09 * vh),
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  }, [loginToggle]);
+    if (loginPage == 0) {
+      loginAnim.setValue((1 - loginToggle) * (-0.09 * vh));
+      Animated.timing(loginAnim, {
+        toValue: loginToggle * (-0.09 * vh),
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(loginAnim, {
+        toValue: -0.09 * vh - loginPage * vh,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loginToggle, loginPage]);
 
   useEffect(() => {
-    fadeLoginAnim.setValue(loginToggle);
-    fadeRegAnim.setValue(1 - loginToggle);
-    Animated.timing(fadeLoginAnim, {
-      toValue: 1 - loginToggle,
-      duration: 250,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start();
-    Animated.timing(fadeRegAnim, {
-      toValue: loginToggle,
-      duration: 250,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start();
+    if (loginPage == 0) {
+      fadeLoginAnim.setValue(loginToggle);
+      fadeRegAnim.setValue(1 - loginToggle);
+      Animated.timing(fadeLoginAnim, {
+        toValue: 1 - loginToggle,
+        duration: 250,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(fadeRegAnim, {
+        toValue: loginToggle,
+        duration: 250,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loginToggle, loginPage]);
+
+  useEffect(() => {
+    setLoginPage(0);
   }, [loginToggle]);
 
   useEffect(() => {
@@ -169,7 +188,7 @@ export default function Index() {
               }}>
                 <View style={styles.button_view}>
                   <TouchableOpacity style={[styles.button, { borderColor: '#448D57', borderWidth: 2 }]}
-                  onPress={() => {setPage(1);}}>
+                    onPress={() => { setPage(1); }}>
                     <Text style={[styles.button_text, { color: '#448D57' }]}>Skip</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.button, { backgroundColor: '#448D57' }]} onPress={nextKey}>
@@ -178,7 +197,7 @@ export default function Index() {
                 </View>
                 <View style={styles.button_view}>
                   <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57' }]}
-                  onPress={() => {setPage(1);}}>
+                    onPress={() => { setPage(1); }}>
                     <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Get Started</Text>
                   </TouchableOpacity>
                 </View>
@@ -187,14 +206,14 @@ export default function Index() {
           </View>
           <Animated.View style={{
             width: vw,
-            height: 1.09 * vh,
+            height: 'auto',
             transform: [{ translateY: loginAnim, }]
           }}>
             <Animated.View style={[styles.views, { opacity: fadeLoginAnim }]}>
               <View style={styles.login_title}>
                 <Image source={roundIcon} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
                 <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>It's time to cook!</Text>
-                <Text style={{ fontSize: 0.02 * vh, fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Log in with your credentials</Text>
+                <Text style={{ fontSize: 0.02 * vh, textAlign: 'center', fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Log in with your credentials</Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.input}>
@@ -206,10 +225,10 @@ export default function Index() {
                 <View style={styles.input}>
                   <Text style={styles.input_title}>Password</Text>
                   <View style={[styles.input_form, { paddingRight: 5 }]}>
-                    <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.06 * vh - 25, }]}></TextInput>
-                    <TouchableOpacity style={[styles.input_form, { width: 0.06 * vh, height: 0.06 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
-                      {!passShown && (<HidePass width={0.02 * vh} height={0.02 * vh} />)}
-                      {passShown && (<HidePass width={0.02 * vh} height={0.02 * vh} />)}
+                    <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
+                    <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
+                      {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                      {passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -219,10 +238,12 @@ export default function Index() {
                     <Text style={[styles.input_title, { fontSize: 0.015 * vh, lineHeight: 0.018 * vh, }]}>Remember me</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.green_text_btn}>
-                    <Text style={[styles.input_title, { fontSize: 0.015 * vh, lineHeight: 0.018 * vh, color: '#448D57', }]}>Forgot Password?</Text>
+                    <Text style={[styles.input_title, { fontSize: 0.015 * vh, lineHeight: 0.018 * vh, color: '#448D57', }]}
+                      onPress={() => { setLoginPage(1) }}>Forgot Password?</Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.04 * vh, marginBottom: -0.02 * vh, }]}>
+                <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.04 * vh }]}
+                  onPress={() => { setLoginPage(3); setDoneText("Welcome back to Ricefield!"); }}>
                   <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Log In</Text>
                 </TouchableOpacity>
                 <View style={{
@@ -232,17 +253,17 @@ export default function Index() {
                   flexDirection: 'row',
                   width: vw,
                   gap: 5,
-                  marginTop: 16,
+                  marginTop: -4,
                 }}>
                   <Text style={{
                     fontFamily: 'Nunito_600SemiBold',
-                    fontSize: 0.02 * vh,
+                    fontSize: 0.016 * vh,
                     lineHeight: 0.03 * vh,
                   }}>First time in the field?</Text>
                   <TouchableOpacity onPress={() => { setLoginToggle(1) }}>
                     <Text style={{
                       fontFamily: 'Nunito_600SemiBold',
-                      fontSize: 0.02 * vh,
+                      fontSize: 0.016 * vh,
                       lineHeight: 0.03 * vh,
                       color: '#448D57',
                     }}>Sign up</Text>
@@ -254,7 +275,7 @@ export default function Index() {
               <View style={styles.login_title}>
                 <Image source={roundIcon} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
                 <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Howdy, Friend</Text>
-                <Text style={{ fontSize: 0.02 * vh, fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Create your farmer's identity</Text>
+                <Text style={{ fontSize: 0.02 * vh, textAlign: 'center', fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Create your farmer's identity</Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.input}>
@@ -272,10 +293,10 @@ export default function Index() {
                 <View style={styles.input}>
                   <Text style={styles.input_title}>Password</Text>
                   <View style={[styles.input_form, { paddingRight: 5 }]}>
-                    <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.06 * vh - 25, }]}></TextInput>
-                    <TouchableOpacity style={[styles.input_form, { width: 0.06 * vh, height: 0.06 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
-                      {!passShown && (<HidePass width={0.02 * vh} height={0.02 * vh} />)}
-                      {passShown && (<HidePass width={0.02 * vh} height={0.02 * vh} />)}
+                    <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
+                    <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
+                      {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                      {passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -285,7 +306,8 @@ export default function Index() {
                     <TextInput style={styles.input_text}></TextInput>
                   </View>
                 </View>
-                <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.02 * vh, marginBottom: -0.018 * vh, }]}>
+                <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.02 * vh }]}
+                  onPress={() => { setLoginPage(2) }}>
                   <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Create Account</Text>
                 </TouchableOpacity>
                 <View style={{
@@ -295,17 +317,17 @@ export default function Index() {
                   flexDirection: 'row',
                   width: vw,
                   gap: 5,
-                  marginTop: 16,
+                  marginTop: -4,
                 }}>
                   <Text style={{
                     fontFamily: 'Nunito_600SemiBold',
-                    fontSize: 0.02 * vh,
+                    fontSize: 0.016 * vh,
                     lineHeight: 0.03 * vh,
                   }}>Already have an account?</Text>
                   <TouchableOpacity onPress={() => { setLoginToggle(0) }}>
                     <Text style={{
                       fontFamily: 'Nunito_600SemiBold',
-                      fontSize: 0.02 * vh,
+                      fontSize: 0.016 * vh,
                       lineHeight: 0.03 * vh,
                       color: '#448D57',
                     }}>Log in</Text>
@@ -313,6 +335,147 @@ export default function Index() {
                 </View>
               </View>
             </Animated.View>
+            <Animated.View style={{
+              width: 3 * vw,
+              height: vh,
+              flexDirection: 'row',
+              transform: [{ translateX: - (forgotPage) * vw, }]
+            }}>
+              <View style={[styles.views,]}>
+                <View style={styles.login_title}>
+                  <Image source={roundIcon} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                  <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Forgot your password?</Text>
+                  <Text style={{ fontSize: 0.02 * vh, fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Don't worry. We got you!</Text>
+                </View>
+                <View style={styles.form}>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>College email</Text>
+                    <View style={[styles.input_form, { width: '100%' }]}>
+                      <TextInput style={styles.input_text} placeholder="farmer@yourschool.edu"></TextInput>
+                    </View>
+                  </View>
+                  <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.028 * vh, marginBottom: -0.02 * vh, }]}
+                    onPress={() => { setForgotPage(1) }}>
+                    <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Continue</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={[styles.views,]}>
+                <View style={styles.login_title}>
+                  <TouchableOpacity onPress={() => { setForgotPage(2) }}>
+                    <Image source={hotRice} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Check your inbox!</Text>
+                  <Text style={{ fontSize: 0.02 * vh, textAlign: 'center', fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>We have just sent you an verification link to your email. Verify to continue.</Text>
+                </View>
+              </View>
+              <View style={[styles.views,]}>
+                <View style={styles.login_title}>
+                  <Image source={roundIcon} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                  <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Forgot your password?</Text>
+                  <Text style={{ fontSize: 0.02 * vh, fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Don't worry. We got you!</Text>
+                </View>
+                <View style={styles.form}>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>New Password</Text>
+                    <View style={[styles.input_form, { paddingRight: 5 }]}>
+                      <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
+                      <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
+                        {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                        {passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>Retype New Password</Text>
+                    <View style={[styles.input_form, { width: '100%' }]}>
+                      <TextInput style={styles.input_text}></TextInput>
+                    </View>
+                  </View>
+                  <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.028 * vh, marginBottom: -0.02 * vh, }]}
+                    onPress={() => { setLoginPage(3); setDoneText("Your password has been reset.") }}>
+                    <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Finish</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Animated.View>
+            <Animated.View style={{
+              width: 'auto',
+              height: vh,
+              flexDirection: 'row',
+              transform: [{ translateX: - (createPage) * vw, }]
+            }}>
+              <View style={[styles.views,]}>
+                <View style={styles.login_title}>
+                  <TouchableOpacity onPress={() => { setCreatePage(1) }}>
+                    <Image source={hotRice} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Check your inbox!</Text>
+                  <Text style={{ fontSize: 0.02 * vh, textAlign: 'center', fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>We have just sent you an verification link to your email. Verify to continue.</Text>
+                </View>
+              </View>
+              <View style={[styles.views,]}>
+                <View style={styles.login_title}>
+                  <Image source={roundIcon} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                  <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Almost there, Farmer!</Text>
+                  <Text style={{ fontSize: 0.02 * vh, fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>Finish your farmer's identity</Text>
+                </View>
+                <View style={styles.form}>
+                  <View style={{
+                    width: 0.9 * vw,
+                    height: 'auto',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    gap: 10,
+                    alignItems: 'center',
+                  }}>
+                    <View style={[styles.input, { width: (0.9 * vw - 10) / 2 }]}>
+                      <Text style={styles.input_title}>First name</Text>
+                      <View style={[styles.input_form, { width: '100%' }]}>
+                        <TextInput style={styles.input_text} placeholder="Quan"></TextInput>
+                      </View>
+                    </View>
+                    <View style={[styles.input, { width: (0.9 * vw - 10) / 2 }]}>
+                      <Text style={styles.input_title}>Last name</Text>
+                      <View style={[styles.input_form, { width: '100%' }]}>
+                        <TextInput style={styles.input_text} placeholder="Nguyen"></TextInput>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>Your school</Text>
+                    <View style={[styles.input_form, { width: '100%' }]}>
+                      <TextInput style={styles.input_text} placeholder="VNU-HCM High School for the Gifted"></TextInput>
+                    </View>
+                  </View>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>Major</Text>
+                    <View style={[styles.input_form, { width: '100%' }]}>
+                      <TextInput style={styles.input_text} placeholder="Mathematics"></TextInput>
+                    </View>
+                  </View>
+                  <View style={styles.input}>
+                    <Text style={styles.input_title}>Graduation Year</Text>
+                    <View style={[styles.input_form, { width: '100%' }]}>
+                      <TextInput style={styles.input_text} placeholder="2026"></TextInput>
+                    </View>
+                  </View>
+                  <TouchableOpacity style={[styles.button_login, { backgroundColor: '#448D57', height: 0.06 * vh, marginTop: 0.028 * vh, marginBottom: -0.02 * vh, }]}
+                    onPress={() => { setLoginPage(3); setDoneText("Welcome to Ricefield!"); }}>
+                    <Text style={[styles.button_text, { color: '#FFFFFF' }]}>Finish</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Animated.View>
+            <View style={[styles.views,]}>
+              <View style={styles.login_title}>
+                <TouchableOpacity>
+                  <Image source={hotRice} style={{ width: 0.08 * vh, height: 0.08 * vh, marginBottom: 0.02 * vh, borderRadius: '50%', objectFit: 'contain' }} />
+                </TouchableOpacity>
+                <Text style={{ fontSize: 0.03 * vh, fontFamily: 'Nunito_800ExtraBold', lineHeight: 0.035 * vh }}>Back to the field!</Text>
+                <Text style={{ fontSize: 0.02 * vh, textAlign: 'center', fontFamily: 'Nunito_400Regular', color: '#448D57', lineHeight: 0.025 * vh }}>{doneText}</Text>
+              </View>
+            </View>
           </Animated.View>
         </Animated.View>
       </View>
@@ -402,7 +565,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_800ExtraBold',
   },
   login_title: {
-    width: vw,
+    width: 0.75 * vw,
     height: 0.2 * vh,
     justifyContent: 'center',
     alignItems: 'center',
@@ -413,22 +576,22 @@ const styles = StyleSheet.create({
     marginTop: 0.02 * vh,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   },
   input: {
     width: 0.9 * vw,
-    height: 0.1 * vh,
+    height: 'auto',
     justifyContent: 'center',
     alignItems: 'flex-start',
     gap: 10,
   },
   input_title: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 0.022 * vh,
-    lineHeight: 0.025 * vh,
+    fontSize: 0.018 * vh,
+    lineHeight: 0.022 * vh,
   },
   input_form: {
-    height: 0.06 * vh,
+    height: 0.05 * vh,
     backgroundColor: '#F6F8F9',
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -447,6 +610,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
   },
   check: {
     width: 'auto',
@@ -456,13 +620,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   checkbox: {
-    marginRight: 10,
+    marginRight: 5,
     width: 0.018 * vh,
     height: 0.018 * vh,
     borderColor: '#000000',
     borderWidth: 2,
     borderRadius: 3,
-    marginTop: -1,
+    marginTop: -2,
   },
   green_text_btn: {
     width: 'auto',
