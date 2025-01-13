@@ -1,0 +1,44 @@
+[
+    {
+        "avatar": "roundIcon.png",
+        "username": "John Doe",
+        "action": 1,
+        "time": "5m",
+        "seen": false
+    },
+    {
+        "avatar": "roundIcon.png",
+        "username": "Jane Doe",
+        "action": 2,
+        "time": "4h",
+        "seen": false
+    },
+    {
+        "avatar": "roundIcon.png",
+        "username": "Jack Doe",
+        "action": 3,
+        "time": "3d",
+        "seen": true
+    },
+    {
+        "avatar": "roundIcon.png",
+        "username": "Jill Doe",
+        "action": 4,
+        "time": "2w",
+        "seen": true
+    },
+    {
+        "avatar": "roundIcon.png",
+        "username": "Jill Guide",
+        "action": 5,
+        "time": "1mo",
+        "seen": true
+    },
+    {
+        "avatar": "roundIcon.png",
+        "username": "Nick Goat",
+        "action": 6,
+        "time": "1y",
+        "seen": true
+    }
+]

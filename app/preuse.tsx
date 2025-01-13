@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Animated, Easing, Text, View, Image, ScrollView, Dimensions, StatusBar, TouchableOpacity, TextInput } from "react-native";
-import CheckBox from 'expo-checkbox';
 import { useFonts, Nunito_400Regular, Nunito_800ExtraBold, Nunito_600SemiBold } from '@expo-google-fonts/nunito';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -250,7 +249,7 @@ export default function Index() {
                       <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
                       <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
                         {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
-                        {passShown && (<ShowPass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                        {passShown && (<ShowPass width={0.056 / 3 * vh} height={0.056 / 3 * vh} />)}
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -318,7 +317,7 @@ export default function Index() {
                       <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
                       <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
                         {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
-                        {passShown && (<ShowPass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                        {passShown && (<ShowPass width={0.056 / 3 * vh} height={0.056 / 3 * vh} />)}
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -404,7 +403,7 @@ export default function Index() {
                         <TextInput style={[styles.input_text, { width: 0.9 * vw - 0.05 * vh - 25, }]}></TextInput>
                         <TouchableOpacity style={[styles.input_form, { width: 0.05 * vh, height: 0.05 * vh, padding: 0, justifyContent: 'center' }]} onPress={() => { setPassShown(!passShown) }}>
                           {!passShown && (<HidePass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
-                          {passShown && (<ShowPass width={0.05 / 3 * vh} height={0.05 / 3 * vh} />)}
+                          {passShown && (<ShowPass width={0.056 / 3 * vh} height={0.056 / 3 * vh} />)}
                         </TouchableOpacity>
                       </View>
                     </View>

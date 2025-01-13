@@ -1,0 +1,52 @@
+[
+    {
+        "name": "SCM303",
+        "farmers": 300,
+        "posts": 52
+    },
+    {
+        "name": "CSE335",
+        "farmers": 10,
+        "posts": 10
+    },
+    {
+        "name": "CSE320",
+        "farmers": 10,
+        "posts": 10
+    },
+    {
+        "name": "CSE232",
+        "farmers": 210,
+        "posts": 49
+    },
+    {
+        "name": "GBL385",
+        "farmers": 10,
+        "posts": 10
+    },
+    {
+        "name": "CSE102",
+        "farmers": 75,
+        "posts": 30
+    },
+    {
+        "name": "ANP200",
+        "farmers": 30,
+        "posts": 3
+    },
+    {
+        "name": "ITM209",
+        "farmers": 10,
+        "posts": 10
+    },
+    {
+        "name": "ACC201",
+        "farmers": 230,
+        "posts": 20
+    },
+    {
+        "name": "ACC202",
+        "farmers": 10,
+        "posts": 10
+    }
+]

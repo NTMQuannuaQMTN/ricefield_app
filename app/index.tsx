@@ -22,9 +22,14 @@ import Rant from "../assets/images/rant.svg";
 import Confession from "../assets/images/confess.svg";
 import Meme from "../assets/images/meme.svg";
 import Dot from "../assets/images/dot.svg";
+const roundIcon = require("../assets/images/roundIcon.png");
 
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
+
+import cookedClasses from "./data/classes.json";
+import notiUser from "./data/noti.json";
+/* 1. Follow, 2. Upvote, 3. Downvote, 4. Reply, 5. Recook, 6. Mention */
 
 export default function Index() {
   let [fontsLoaded] = useFonts({
@@ -42,19 +47,6 @@ export default function Index() {
   const pagebarAnim = new Animated.Value(0);
   const [bar, setBar] = useState(0);
   const [prev, setPrev] = useState(0);
-
-  const cookedClasses = [
-    { "name": "SCM303", "farmers": 300, "posts": 52 },
-    { "name": "CSE335", "farmers": 10, "posts": 10 },
-    { "name": "CSE320", "farmers": 10, "posts": 10 },
-    { "name": "CSE232", "farmers": 210, "posts": 49 },
-    { "name": "GBL385", "farmers": 10, "posts": 10 },
-    { "name": "CSE102", "farmers": 75, "posts": 30 },
-    { "name": "ANP200", "farmers": 30, "posts": 3 },
-    { "name": "ITM209", "farmers": 10, "posts": 10 },
-    { "name": "ACC201", "farmers": 230, "posts": 20 },
-    { "name": "ACC202", "farmers": 10, "posts": 10 },
-  ]
 
   const sortedClasses = cookedClasses.sort((a, b) => {
     if (b.farmers !== a.farmers) {
@@ -262,6 +254,30 @@ export default function Index() {
                       </View>
                     </View>
                   </View>
+                ))}
+              </ScrollView>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.pageTitle}>Notifications</Text>
+              <ScrollView style={styles.scroll}>
+                {notiUser.map((noti, index) => (
+                  <TouchableOpacity key={index} style={[styles.classes, { paddingLeft: 0.05 * vw, gap: 0.036 * vw, backgroundColor: (noti.seen) ? "#FFFFFF" : "#86EFAC" }]}>
+                    <Image source={roundIcon} style={{ width: 0.044 * vh, height: 0.044 * vh, borderRadius: 0.05 / 2 * vh }}></Image>
+                    <View>
+                      <Text style={{
+                        fontSize: 0.020 * vh,
+                        lineHeight: 0.024 * vh, 
+                        fontFamily: 'Nunito_400Regular', 
+                        marginTop: 0.002 * vh, 
+                        marginBottom: -2
+                        }}><Text style={{fontFamily: 'Nunito_700Bold' }}>{noti.username}</Text> {(noti.action === 1) ? "is following you" :
+                        (noti.action === 2) ? "upvoted your post" :
+                        (noti.action === 3) ? "downvoted your post" :
+                        (noti.action === 4) ? "replied to your post" :
+                        (noti.action === 5) ? "recooked your post" : "mentioned you"}</Text>
+                      <Text style={{ fontSize: 0.016 * vh, lineHeight: 0.02 * vh, fontFamily: 'Nunito_400Regular', marginTop: -2 }}>{noti.time}</Text>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
