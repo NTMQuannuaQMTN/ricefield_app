@@ -625,6 +625,7 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 0.018 * vh,
+    letterSpacing: -0.4,
   },
   remember: {
     width: 0.9 * vw,

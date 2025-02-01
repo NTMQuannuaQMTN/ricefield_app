@@ -110,7 +110,7 @@ export default function Index() {
       <SafeAreaProvider>
         <StatusBar backgroundColor='#FFFFFF' barStyle='default' />
         <Animated.View style={[{ width: 2 * vw, height: vh, flexDirection: 'row', transform: [{ translateX: myProfileAnim }] }]}>
-          <View style={[styles.container, { opacity: (burgerToggle) ? 0.5 : 1 }]}>
+          <View style={[styles.container, { opacity: (burgerToggle) ? 0.5 : 1}]}>
             <View style={styles.headbar}>
               <View style={styles.header}>
                 <LogoHeadbar height={0.04 * vh} />
@@ -299,18 +299,7 @@ export default function Index() {
               </View>
             </Animated.View>
           </View>
-          <View style={[styles.container, { backgroundColor: "#F6F8F9" }]}>
-            <View style={styles.profileHeader}>
-              <TouchableOpacity onPress={() => { setMyProfile(0) }}>
-                <Back height={0.02 * vh} width={0.02 * vh}></Back>
-              </TouchableOpacity>
-              <Text style={{ fontFamily: 'Nunito_700Bold', fontSize: 0.016 * vh, lineHeight: 0.02 * vh }}>QnRJ</Text>
-              <TouchableOpacity>
-                <Link height={0.02 * vh} width={0.02 * vh}></Link>
-              </TouchableOpacity>
-            </View>
-            <ProfilePage></ProfilePage>
-          </View>
+          <ProfilePage backHome={() => {setMyProfile(0)}}></ProfilePage>
         </Animated.View>
       </SafeAreaProvider>
     );
