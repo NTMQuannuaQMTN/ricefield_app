@@ -22,17 +22,18 @@ import Rant from "../assets/images/rant.svg";
 import Confession from "../assets/images/confess.svg";
 import Meme from "../assets/images/meme.svg";
 import Dot from "../assets/images/dot.svg";
-import Back from "../assets/images/back.svg";
-import Link from "../assets/images/link.svg";
-const roundIcon = require("../assets/images/roundIcon.png");
-const cover = require("../assets/images/cover.png");
 
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
 
 import cookedClasses from "./data/classes.json";
 import notiUser from "./data/noti.json";
-import ProfilePage from "./profile_page";
+import postList from "./data/posts.json";
+import users from "./data/users.json";
+import MyProfilePage from "./my_profile_page";
+import OtherProfilePage from "./other_profile_page";
+import Post from "./post";
+import Notification from "./notification";
 /* 1. Follow, 2. Upvote, 3. Downvote, 4. Reply, 5. Recook, 6. Mention */
 
 export default function Index() {
@@ -44,6 +45,12 @@ export default function Index() {
     Nunito_400Regular,
   });
 
+  const currentID = "u2";
+  let usersID: string[] = [];
+  users.forEach(element => {
+    usersID.push(element.id);
+  });;
+  const [posts, setPosts] = useState(postList);
   const [burgerToggle, setBurgerToggle] = useState(false);
   const [spaceToggle, setSpaceToggle] = useState(0);
   const rotateAnim = new Animated.Value(0);
@@ -53,6 +60,10 @@ export default function Index() {
   const [prev, setPrev] = useState(0);
   const [myProfile, setMyProfile] = useState(0);
   const myProfileAnim = new Animated.Value(0);
+  const [space, setSpace] = useState("SPACES");
+  const [viewID, setViewID] = useState(currentID);
+
+  const curUser = users[usersID.indexOf(currentID)];
 
   const sortedClasses = cookedClasses.sort((a, b) => {
     if (b.farmers !== a.farmers) {
@@ -105,12 +116,20 @@ export default function Index() {
     }).start();
   }, [myProfile]);
 
+  const updatePost = (updatedPost) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+      )
+    );
+  };
+
   if (fontsLoaded) {
     return (
       <SafeAreaProvider>
         <StatusBar backgroundColor='#FFFFFF' barStyle='default' />
         <Animated.View style={[{ width: 2 * vw, height: vh, flexDirection: 'row', transform: [{ translateX: myProfileAnim }] }]}>
-          <View style={[styles.container, { opacity: (burgerToggle) ? 0.5 : 1}]}>
+          <View style={[styles.container, { opacity: (burgerToggle) ? 0.5 : 1 }]}>
             <View style={styles.headbar}>
               <View style={styles.header}>
                 <LogoHeadbar height={0.04 * vh} />
@@ -162,7 +181,7 @@ export default function Index() {
                     <Noti width={0.029 * vh} height={0.029 * vh} />
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.pagebar]} onPress={() => { setMyProfile(1) }}>
+                <TouchableOpacity style={[styles.pagebar]} onPress={() => { setMyProfile(1); setViewID(currentID) }}>
                   <View style={[styles.iconView]}>
                     <Profile width={0.028 * vh} height={0.028 * vh} />
                   </View>
@@ -189,36 +208,49 @@ export default function Index() {
                     fontSize: 0.02 * vh,
                     lineHeight: 0.04 * vh,
                     fontFamily: 'Nunito_800ExtraBold',
-                  }}>SPACES</Text>
+                  }}>{space}</Text>
                   <Animated.View style={{ transform: [{ rotate: interpolateRotate, }] }}>
                     <Arrow width={0.024 * vh} height={0.024 * vh}></Arrow>
                   </Animated.View>
                 </TouchableOpacity>
-                <Animated.View style={[styles.modalContent, { position: 'absolute', top: 0.06 * vh, left: 20, width: 0.35 * vw, shadowColor: '#000000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 0.01 * vh }, shadowRadius: 0.01 * vh, opacity: spaceAnim }]}>
-                  <TouchableOpacity style={styles.option}>
+                <Animated.View style={[styles.modalContent, { position: 'absolute', top: 0.06 * vh, left: 20, width: 0.35 * vw, shadowColor: '#000000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 0.01 * vh }, shadowRadius: 0.01 * vh, opacity: spaceAnim, zIndex: 1, }]}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("NEWS"); setSpaceToggle(0) }}>
                     <News height={0.02 * vh} />
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>News</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.option}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("QUESTIONS"); setSpaceToggle(0) }}>
                     <Questions height={0.02 * vh} />
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>Questions</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.option}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("RANT"); setSpaceToggle(0) }}>
                     <Rant height={0.02 * vh} />
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>Rant</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.option}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("CONFESSION"); setSpaceToggle(0) }}>
                     <Confession height={0.02 * vh} />
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>Confession</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.option}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("MEME"); setSpaceToggle(0) }}>
                     <Meme height={0.02 * vh} />
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>Meme</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.option}>
+                  <TouchableOpacity style={styles.option} onPress={() => { setSpace("SPACES"); setSpaceToggle(0) }}>
                     <Text style={[styles.optionText, { fontFamily: 'Nunito_500Medium' }]}>All spaces</Text>
                   </TouchableOpacity>
                 </Animated.View>
+                <ScrollView>
+                  <View style={{ gap: 0.012 * vh }}>
+                    {posts.map((post, index) => {
+                      if (post.spaces.toUpperCase() === space || space === "SPACES") {
+                        return <Post key={index} user={curUser} postInfo={post} viewUser={() => {
+                          setViewID(post.id.substring(0, post.id.indexOf("p")));
+                          setMyProfile(1);
+                        }} setSpace={() => { setSpace(post.spaces.toUpperCase()) }} updatePost={updatePost}></Post>;
+                      }
+                      return null;
+                    })}
+                  </View>
+                </ScrollView>
               </View>
               <View style={styles.content}>
                 <Text style={styles.pageTitle}>CLASSES BEING COOKED</Text>
@@ -277,29 +309,15 @@ export default function Index() {
                 <Text style={styles.pageTitle}>Notifications</Text>
                 <ScrollView style={styles.scroll}>
                   {notiUser.map((noti, index) => (
-                    <TouchableOpacity key={index} style={[styles.classes, { paddingLeft: 0.05 * vw, gap: 0.036 * vw, backgroundColor: (noti.seen) ? "#FFFFFF" : "#86EFAC" }]}>
-                      <Image source={roundIcon} style={{ width: 0.044 * vh, height: 0.044 * vh, borderRadius: 0.05 / 2 * vh }}></Image>
-                      <View>
-                        <Text style={{
-                          fontSize: 0.020 * vh,
-                          lineHeight: 0.024 * vh,
-                          fontFamily: 'Nunito_400Regular',
-                          marginTop: 0.002 * vh,
-                          marginBottom: -2
-                        }}><Text style={{ fontFamily: 'Nunito_700Bold' }}>{noti.username}</Text> {(noti.action === 1) ? "is following you" :
-                          (noti.action === 2) ? "upvoted your post" :
-                            (noti.action === 3) ? "downvoted your post" :
-                              (noti.action === 4) ? "replied to your post" :
-                                (noti.action === 5) ? "recooked your post" : "mentioned you"}</Text>
-                        <Text style={{ fontSize: 0.016 * vh, lineHeight: 0.02 * vh, fontFamily: 'Nunito_400Regular', marginTop: -2 }}>{noti.time}</Text>
-                      </View>
-                    </TouchableOpacity>
+                    <Notification key={index} notiInfo={noti}></Notification>
                   ))}
                 </ScrollView>
               </View>
             </Animated.View>
           </View>
-          <ProfilePage backHome={() => {setMyProfile(0)}}></ProfilePage>
+          {(viewID === currentID) && <MyProfilePage user={curUser} backHome={() => { setMyProfile(0) }} postList={posts} updatePost={updatePost}></MyProfilePage>}
+          {/* Bug: Bấm vô OtherProfilePage của A rồi bấm OPP của B -> Hiện OPP của A */}
+          {(viewID !== currentID) && <OtherProfilePage user={users[usersID.indexOf(viewID)]} backHome={() => { setMyProfile(0) }} postList={posts} updatePost={updatePost}></OtherProfilePage>}
         </Animated.View>
       </SafeAreaProvider>
     );
