@@ -16,6 +16,7 @@ import Lock from "../assets/images/lock.svg";
 import Back from "../assets/images/back.svg";
 import Link from "../assets/images/link.svg";
 import Post from "./post";
+import Copied from "./copied_modal";
 
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
@@ -33,6 +34,13 @@ export default function MyProfilePage(props: any) {
     const [follow, setFollow] = React.useState(false);
     const [bio, setBio] = React.useState('');
     const [user, setUser] = React.useState(props.user);
+    const [copied, setCopied] = React.useState(false);
+
+    useEffect(() => {
+        if (copied) {
+            setTimeout(() => { setCopied(false) }, 1000);
+        }
+    }, [copied]);
 
     useEffect(() => {
         setUser(props.user);
@@ -46,9 +54,10 @@ export default function MyProfilePage(props: any) {
                         <Back height={0.02 * vh} width={0.02 * vh}></Back>
                     </TouchableOpacity>
                     <Text style={{ fontFamily: 'Nunito_700Bold', fontSize: 0.016 * vh, lineHeight: 0.02 * vh }}>{user.name}</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setCopied(true)}>
                         <Link height={0.02 * vh} width={0.02 * vh}></Link>
                     </TouchableOpacity>
+                    {copied && <Copied content={"Profile link copied!"}></Copied>}
                 </View>
                 <View style={styles.profile}>
                     <Image source={cover} style={styles.banner}></Image>

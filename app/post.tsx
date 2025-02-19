@@ -23,6 +23,7 @@ import CopyLink from "../assets/images/link.svg";
 import Report from "../assets/images/report_yellow.svg";
 import Edit from "../assets/images/edit.svg";
 import Delete from "../assets/images/delete.svg";
+import Copied from "./copied_modal";
 
 export default function Post(props: any) {
   let [fontsLoaded] = useFonts({
@@ -36,10 +37,18 @@ export default function Post(props: any) {
   const [vote, setVote] = React.useState(props.postInfo.vote);
   const [mark, setMark] = React.useState(props.postInfo.bookmark);
   const [action, setAction] = React.useState(false);
+  const [share, setShare] = React.useState(false);
   const [react, setReact] = React.useState(props.postInfo.react);
   const [content, setContent] = React.useState(props.postInfo.content);
   const [user, setUser] = React.useState(props.user);
   const currentUser = (props.postInfo.id.substring(0, props.postInfo.id.indexOf("p")) === user.id);
+  const [copied, setCopied] = React.useState(false);
+
+  useEffect(() => {
+    if (copied) {
+      setTimeout(() => {setCopied(false)}, 1000);
+    }
+  }, [copied]);
 
   const handleVote = (newVote: number) => {
     const orgReact = react - vote;
@@ -77,19 +86,18 @@ export default function Post(props: any) {
     return (
       <View style={{
         flexDirection: 'row',
-        padding: 0.016 * vh,
+        padding: 0.01 * vh,
         backgroundColor: '#FFFFFF',
-        gap: 0.012 * vh,
+        gap: 0.01 * vh,
       }}>
         <TouchableOpacity style={{
           position: 'absolute',
           top: 0,
           right: 0,
-          paddingHorizontal: 0.016 * vh,
-          paddingVertical: 0.016 * vh,
+          paddingHorizontal: 0.01 * vh,
+          paddingVertical: 0.01 * vh,
         }} onPress={() => { setAction(true) }}>
           <ThreeDot width={0.024 * vh} height={0.024 * vh}></ThreeDot>
-
           <Modal
             visible={action}
             transparent={true}
@@ -159,7 +167,7 @@ export default function Post(props: any) {
           </Modal>
         </TouchableOpacity>
         <TouchableOpacity onPress={props.viewUser}>
-          <Image source={UserLogo} style={{ width: 0.04 * vh, height: 0.04 * vh, borderRadius: vh }}></Image>
+          <Image source={UserLogo} style={{ width: 0.056 * vh, height: 0.056 * vh, borderRadius: vh }}></Image>
         </TouchableOpacity>
         <View>
           <Text style={{
@@ -244,10 +252,93 @@ export default function Post(props: any) {
                   {mark && <Saved width={0.024 * vh} height={0.024 * vh}></Saved>}
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setShare(true)}>
                 <View style={styles.reactBox}>
                   <Share width={0.024 * vh} height={0.024 * vh}></Share>
                 </View>
+                <Modal
+                  visible={share}
+                  transparent={true}
+                  onRequestClose={() => setShare(false)}
+                >
+                  <TouchableWithoutFeedback onPress={() => setShare(false)}>
+                    <View style={{
+                      flex: 1,
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-end',
+                      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                      paddingTop: 0.115 * vh,
+                      paddingRight: 20,
+                    }}>
+                      <View style={{
+                        width: 0.7 * vw,
+                        height: 0.16 * vh,
+                        position: 'absolute',
+                        top: 0.42 * vh,
+                        right: 0.15 * vw,
+                        backgroundColor: '#FFFFFF',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 0.028 * vh,
+                      }}>
+                        <View style={{
+                          width: '100%',
+                          height: '70%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderColor: '#B9B9B9',
+                          borderBottomWidth: 1,
+                        }}>
+                          <Text style={{
+                            fontFamily: 'Nunito_800ExtraBold',
+                            fontSize: 0.02 * vh,
+                            lineHeight: 0.024 * vh,
+                          }}>Share post</Text>
+                          <Text style={{
+                            fontFamily: 'Nunito_400Regular',
+                            fontSize: 0.016 * vh,
+                            lineHeight: 0.02 * vh,
+                          }}>Do you want to copy link to this post?</Text>
+                        </View>
+                        <View style={{
+                          flexDirection: 'row',
+                          height: '30%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <TouchableOpacity style={{
+                            width: '50%',
+                            height: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderColor: '#B9B9B9',
+                            borderRightWidth: 1,
+                          }} onPress={() => setShare(false)}>
+                            <Text style={{
+                              fontFamily: 'Nunito_400Regular',
+                              fontSize: 0.018 * vh,
+                              lineHeight: 0.024 * vh,
+                            }}>Not now</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={{
+                            width: '50%',
+                            height: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }} onPress={() => {setShare(false); setCopied(true)}}>
+                            <Text style={{
+                              fontFamily: 'Nunito_700Bold',
+                              fontSize: 0.018 * vh,
+                              lineHeight: 0.024 * vh,
+                              color: '#448D57',
+                            }}>Copy link</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </Modal>
+                {copied && <Copied content={"Link copied!"}></Copied>}
               </TouchableOpacity>
             </View>
           </View>
